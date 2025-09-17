@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Birthday Game</title>
+  <meta charset="UTF--8">
+  <title>Birthday Game 🎂</title>
   <style>
     body {
       margin: 0;
@@ -39,61 +39,42 @@
       border-radius: 12px;
       margin-bottom: 20px;
       max-width: 750px;
-      font-size: 1.1em;
+      font-size: 1.2em;
       opacity: 0;
       transition: opacity 1s ease-in-out;
       white-space: pre-line;
-      overflow-y: auto;
-      max-height: 60vh;
     }
 
     .dialogue {
       margin: 12px 0;
-      display: flex;
-      max-width: 100%;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      text-align: left;
     }
 
-    .dialogue.show {
-      opacity: 1;
-      transform: translateY(0);
+    .name {
+      font-weight: bold;
+      margin-bottom: 4px;
     }
 
-    .dialogue-content {
-      padding: 10px 16px;
+    .bubble {
+      display: inline-block;
+      padding: 12px 18px;
       border-radius: 12px;
-      max-width: 70%;
+      max-width: 90%;
     }
 
-    /* Left (others) */
-    .left {
-      justify-content: flex-start;
-    }
-    .left .dialogue-content {
-      background: #add8e6;
-      color: black;
-    }
-
-    /* Right (her) */
-    .right {
-      justify-content: flex-end;
-    }
-    .right .dialogue-content {
+    .you .bubble {
       background: #ffb6c1;
       color: black;
     }
 
-    /* Narrator (center) */
-    .narrator {
-      justify-content: center;
-      font-style: italic;
+    .friend .bubble {
+      background: #add8e6;
+      color: black;
     }
-    .narrator .dialogue-content {
-      background: transparent;
-      color: white;
-      max-width: 100%;
+
+    .me .bubble {
+      background: #98fb98;
+      color: black;
     }
 
     .choice {
@@ -133,12 +114,13 @@
   </audio>
 
   <script>
+    // Each scene has dialogue lines
     const scenes = {
       start: {
         dialogue: [
           { speaker: "Nayana", text: "Happy Birthday!!!" },
           { speaker: "You", text: "Aww thank you!" },
-          { speaker: "Narrator", text: "Nayana hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep." }
+          { speaker: "Narrator", text: "Your roommate hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep." }
         ],
         image: "images/midnight.jpg",
         options: [{ text: "Continue", next: "morning" }]
@@ -146,7 +128,7 @@
       morning: {
         dialogue: [
           { speaker: "Narrator", text: "The next morning... " },
-          { speaker: "Narrator", text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number..." }
+          { speaker: "Narrator", text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number... You wonder who it could be, and consider declining it since you're scared." }
         ],
         image: "images/morning.jpg",
         options: [
@@ -186,7 +168,7 @@
       },
       hotel: {
         dialogue: [
-          { speaker: "Narrator", text: "It's a cozy room with cream-coloured walls and a giant mirror. The bed is fluffy and warm, you can't wait to snuggle inside the covers." },
+          { speaker: "Narrator", text: "It's a cozy room, with cream-coloured walls and a giant mirror. The bed is fluffy and warm, you can't wait to snuggle inside the covers." },
           { speaker: "Me", text: "What do you wanna do my love?" },
           { speaker: "You", text: "Can we watch a movie?" },
           { speaker: "Me", text: "Of course babyyyy, I'll put it on!" },
@@ -195,28 +177,39 @@
           { speaker: "Narrator", text: "The day feels like a warm dream, wrapped in love." }
         ],
         image: "images/hotel.jpg",
-        options: [{ text: "Continue", next: "ending" }]
+        options: [{ text: "Continue", next: "hotel_ending" }]
+      },
+      hotel_ending: {
+        dialogue: [
+          { speaker: "Narrator", text: "As the night deepens, you both are wrapped under the blankets, watching movies until your eyelids grow heavy." },
+          { speaker: "Me", text: "I wish we could stay like this forever, my love." },
+          { speaker: "You", text: "This was the perfect birthday... I don’t need anything else 💖" },
+          { speaker: "Narrator", text: "You both drift off to sleep in each other's arms, with the TV still glowing softly in the background." }
+        ],
+        image: "images/hotel-night.jpg",
+        options: [{ text: "Restart 🔄", next: "start" }]
       },
       city: {
         dialogue: [
-          { speaker: "Narrator", text: "You decide you want to go exploring Bangalore together..." },
+          { speaker: "Narrator", text: "You decide you want to go exploring Bangalore together, since he hasn't seen much of it." },
           { speaker: "Me", text: "How would you like a pottery class? I heard there's a cute little studio nearby." },
           { speaker: "You", text: "That sounds adorable! Let's do it babyyy." },
+          { speaker: "Narrator", text: "You both head to the pottery studio, where you're greeted by a friendly instructor." },
           { speaker: "Instructor", text: "Welcome! Today, we'll be making our own pottery pieces. Just let your imagination run wild!" },
-          { speaker: "Narrator", text: "You both sit at a table with clay and tools. Laughter fills the air as you playfully tease each other's creations." },
+          { speaker: "Narrator", text: "You and he sit at a table covered in clay, tools, and water bowls. You start shaping your clay, laughing as you try to make something recognizable. You tell him his clay looks like a frog and he pokes you with his clay-stained hands and you get fake-mad." },
           { speaker: "You", text: "This pottery class is so cute!" },
           { speaker: "Me", text: "Our cups will always remind us of today" },
-          { speaker: "Narrator", text: "After pottery, you head to Baamey's for momo, chowmein, and aloo dum. It's the perfect day." }
+          { speaker: "Narrator", text: "After making your pottery, you feel hungry, and he suggests you go to Baamey's, the Nepali restaurant in Bangalore, a place you've always wanted to go. You're so excited! You order momo and chowmein and aloo dum and it all tastes exactly how you'd expect. It's the perfect day." }
         ],
         image: "images/city.jpg",
-        options: [{ text: "Continue ➡️", next: "ending" }]
+        options: [{ text: "Continue ➡️", next: "city_ending" }]
       },
-      ending: {
+      city_ending: {
         dialogue: [
-          { speaker: "Narrator", text: "You return to the hotel room, legs tired but hearts so full." },
-          { speaker: "Me", text: "Happy Birthday, my love, I hope you enjoyed today." },
-          { speaker: "You", text: "Babyyy I can't believe you pulled this off, how did you not tell me?" },
-          { speaker: "Narrator", text: "You fall into deep conversations and drift asleep in each other's arms." }
+          { speaker: "Narrator", text: "By the time you get back, your legs ache but your heart is bursting with joy." },
+          { speaker: "Me", text: "Best. Day. Ever." },
+          { speaker: "You", text: "Agreed. I’ll never forget this day." },
+          { speaker: "Narrator", text: "The city lights fade outside as you both fall asleep, full of laughter and love." }
         ],
         image: "images/night.jpg",
         options: [{ text: "Restart 🔄", next: "start" }]
@@ -228,65 +221,50 @@
     const choicesDiv = document.getElementById("choices");
     const music = document.getElementById("bg-music");
 
-    function renderDialogue(dialogue, callback) {
+    function renderDialogue(dialogue) {
       storyBox.innerHTML = "";
-      let index = 0;
-
-      function showNextLine() {
-        if (index >= dialogue.length) {
-          if (callback) callback();
-          return;
-        }
-
-        const line = dialogue[index];
+      dialogue.forEach(line => {
         const div = document.createElement("div");
+        div.classList.add("dialogue");
 
-        if (line.speaker === "You") {
-          div.className = "dialogue right";
-        } else if (line.speaker === "Narrator") {
-          div.className = "dialogue narrator";
-        } else {
-          div.className = "dialogue left";
+        if (line.speaker === "You") div.classList.add("you");
+        else if (line.speaker === "Nayana" || line.speaker === "Instructor") div.classList.add("friend");
+        else if (line.speaker === "Me") div.classList.add("me");
+
+        if (line.speaker !== "Narrator") {
+          const name = document.createElement("div");
+          name.classList.add("name");
+          name.innerText = line.speaker;
+          div.appendChild(name);
         }
 
-        const content = document.createElement("div");
-        content.classList.add("dialogue-content");
-        content.innerText = line.text;
+        const bubble = document.createElement("div");
+        bubble.classList.add("bubble");
+        bubble.innerText = line.text;
+        div.appendChild(bubble);
 
-        div.appendChild(content);
         storyBox.appendChild(div);
-
-        // Smooth reveal
-        setTimeout(() => div.classList.add("show"), 50);
-
-        // Auto scroll down
-        storyBox.scrollTop = storyBox.scrollHeight;
-
-        index++;
-        setTimeout(showNextLine, 1200); // 1.2s delay between messages
-      }
-
-      showNextLine();
+      });
     }
 
     function showScene(name) {
       const scene = scenes[name];
       bg.style.opacity = 0;
       storyBox.style.opacity = 0;
-      choicesDiv.innerHTML = "";
+      [...document.getElementsByClassName("choice")].forEach(btn => btn.style.opacity = 0);
 
       setTimeout(() => {
         bg.src = scene.image;
-        renderDialogue(scene.dialogue, () => {
-          // After dialogues, show choices
-          scene.options.forEach(option => {
-            const btn = document.createElement("button");
-            btn.innerText = option.text;
-            btn.className = "choice";
-            btn.onclick = () => showScene(option.next);
-            choicesDiv.appendChild(btn);
-            setTimeout(() => btn.style.opacity = 1, 200);
-          });
+        renderDialogue(scene.dialogue);
+        choicesDiv.innerHTML = "";
+
+        scene.options.forEach(option => {
+          const btn = document.createElement("button");
+          btn.innerText = option.text;
+          btn.className = "choice";
+          btn.onclick = () => showScene(option.next);
+          choicesDiv.appendChild(btn);
+          setTimeout(() => btn.style.opacity = 1, 200);
         });
 
         setTimeout(() => {
@@ -306,4 +284,3 @@
   </script>
 </body>
 </html>
-
