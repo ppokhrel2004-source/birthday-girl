@@ -131,7 +131,7 @@
 
     let currentScene = null;
     let currentDialogueIndex = 0;
-
+    
     function renderNextDialogue() {
       const dialogue = currentScene.dialogue;
       if (currentDialogueIndex < dialogue.length) {
@@ -168,18 +168,19 @@
     }
 
     function showScene(name) {
-      currentScene = scenes[name];
-      currentDialogueIndex = 0;
-      storyBox.innerHTML = "";
-      choicesDiv.innerHTML = "";
-      bg.style.opacity = 0;
-
-      setTimeout(() => {
-        bg.src = currentScene.image;
-        bg.style.opacity = 1;
-        renderNextDialogue();
-      }, 200);
-    }
+        currentScene = scenes[name];
+        currentDialogueIndex = 0;
+        storyBox.innerHTML = "";
+        choicesDiv.innerHTML = "";
+        bg.style.opacity = 0;
+        storyBox.style.opacity = 1; // FIX: make sure story box is visible
+      
+        setTimeout(() => {
+          bg.src = currentScene.image;
+          bg.style.opacity = 1;
+          renderNextDialogue();
+        }, 200);
+      }
 
     // tap anywhere to advance
     document.body.addEventListener("click", () => {
@@ -191,4 +192,5 @@
   </script>
 </body>
 </html>
+
 
