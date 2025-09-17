@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF--8">
+  <meta charset="UTF-8">
   <title>Birthday Game 🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: "Roboto", sans-serif;
+      font-family: "Quicksand", sans-serif;
       background: #000;
       color: white;
       overflow: hidden;
@@ -36,7 +37,7 @@
     #story {
       background: rgba(0, 0, 0, 0.6);
       padding: 20px;
-      border-radius: 12px;
+      border-radius: 16px;
       margin-bottom: 20px;
       max-width: 750px;
       font-size: 1.2em;
@@ -46,20 +47,42 @@
     }
 
     .dialogue {
-      margin: 12px 0;
-      text-align: left;
+      margin: 14px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeSlideIn 0.8s forwards;
     }
 
-    .name {
-      font-weight: bold;
-      margin-bottom: 4px;
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      flex-shrink: 0;
     }
 
     .bubble {
       display: inline-block;
       padding: 12px 18px;
-      border-radius: 12px;
+      border-radius: 16px;
       max-width: 90%;
+      animation: bubblePop 0.5s ease;
+    }
+
+    @keyframes bubblePop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .you .bubble {
@@ -77,23 +100,37 @@
       color: black;
     }
 
+    .narrator .bubble {
+      background: #eee;
+      color: black;
+      font-style: italic;
+    }
+
     .choice {
       display: inline-block;
-      margin: 8px;
-      padding: 12px 24px;
+      margin: 10px;
+      padding: 14px 28px;
       border: none;
-      border-radius: 10px;
-      background: pink;
+      border-radius: 12px;
+      background: #ffb6c1;
       color: black;
-      font-size: 1em;
+      font-size: 1.1em;
       cursor: pointer;
       transition: 0.3s;
+      transform: scale(0.9);
       opacity: 0;
+      animation: choicePop 0.5s forwards;
     }
 
     .choice:hover {
       background: hotpink;
       color: white;
+      transform: scale(1.05);
+    }
+
+    @keyframes choicePop {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     audio {
@@ -114,21 +151,20 @@
   </audio>
 
   <script>
-    // Each scene has dialogue lines
     const scenes = {
       start: {
         dialogue: [
-          { speaker: "Nayana", text: "Happy Birthday!!!" },
-          { speaker: "You", text: "Aww thank you!" },
-          { speaker: "Narrator", text: "Your roommate hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep." }
+          { text: "Happy Birthday!!!", avatar: "avatars/friend1.jpg", role: "friend" },
+          { text: "Aww thank you!", avatar: "avatars/you.jpg", role: "you" },
+          { text: "Your roommate hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep.", avatar: "avatars/narrator.jpg", role: "narrator" }
         ],
         image: "images/midnight.jpg",
         options: [{ text: "Continue", next: "morning" }]
       },
       morning: {
         dialogue: [
-          { speaker: "Narrator", text: "The next morning... " },
-          { speaker: "Narrator", text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number... You wonder who it could be, and consider declining it since you're scared." }
+          { text: "The next morning…", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number...", avatar: "avatars/narrator.jpg", role: "narrator" }
         ],
         image: "images/morning.jpg",
         options: [
@@ -138,78 +174,71 @@
       },
       call_picked: {
         dialogue: [
-          { speaker: "You", text: "Hello?" },
-          { speaker: "Delivery", text: "Shreyaa va? We have a flower delivery for you downstairs." },
-          { speaker: "Narrator", text: "Excited, you rush down… and there he is, standing with flowers just for you." }
+          { text: "Hello?", avatar: "avatars/you.jpg", role: "you" },
+          { text: "We have a flower delivery for you downstairs.", avatar: "avatars/friend2.jpg", role: "friend" },
+          { text: "Excited, you rush down… and there he is, standing with flowers just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
         ],
         image: "images/flowers.jpg",
         options: [{ text: "Continue", next: "together" }]
       },
       call_declined: {
         dialogue: [
-          { speaker: "You", text: "Nah, must be spam..." },
-          { speaker: "Nayana", text: "Nope! Come downstairs right now. This is important!" },
-          { speaker: "Narrator", text: "She drags you down... and there he is, standing with flowers, just for you." }
+          { text: "Nah, must be spam…", avatar: "avatars/you.jpg", role: "you" },
+          { text: "Nope! Come downstairs right now. This is important!", avatar: "avatars/friend1.jpg", role: "friend" },
+          { text: "She drags you down… and there he is, standing with flowers, just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
         ],
         image: "images/flowers.jpg",
         options: [{ text: "Continue", next: "together" }]
       },
       together: {
         dialogue: [
-          { speaker: "Me", text: "Happy Birthday, my sweetheart baby boy." },
-          { speaker: "You", text: "Babyyyyyyyyy" },
-          { speaker: "Me", text: "Now... how shall we spend the day, my lady?" }
+          { text: "Happy Birthday, my sweetheart 💐", avatar: "avatars/me.jpg", role: "me" },
+          { text: "Babyyyyyy 🥺", avatar: "avatars/you.jpg", role: "you" },
+          { text: "Now… how shall we spend the day?", avatar: "avatars/me.jpg", role: "me" }
         ],
         image: "images/decision.jpg",
         options: [
-          { text: "Stay in his hotel room", next: "hotel" },
-          { text: "Explore the city", next: "city" }
+          { text: "Stay in the hotel room 🏨", next: "hotel" },
+          { text: "Explore the city 🌆", next: "city" }
         ]
       },
       hotel: {
         dialogue: [
-          { speaker: "Narrator", text: "It's a cozy room, with cream-coloured walls and a giant mirror. The bed is fluffy and warm, you can't wait to snuggle inside the covers." },
-          { speaker: "Me", text: "What do you wanna do my love?" },
-          { speaker: "You", text: "Can we watch a movie?" },
-          { speaker: "Me", text: "Of course babyyyy, I'll put it on!" },
-          { speaker: "You", text: "This movie is my favorite :>" },
-          { speaker: "Me", text: "And the pizza and pasta make it even better" },
-          { speaker: "Narrator", text: "The day feels like a warm dream, wrapped in love." }
+          { text: "It's a cozy room, with cream walls and a fluffy bed. You can’t wait to snuggle inside.", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "What do you wanna do, my love?", avatar: "avatars/me.jpg", role: "me" },
+          { text: "Can we watch a movie?", avatar: "avatars/you.jpg", role: "you" },
+          { text: "Of course babyyy, I’ll put it on!", avatar: "avatars/me.jpg", role: "me" },
+          { text: "This movie is my favorite :>", avatar: "avatars/you.jpg", role: "you" },
+          { text: "And the pizza and pasta make it even better!", avatar: "avatars/me.jpg", role: "me" },
+          { text: "The day feels like a warm dream, wrapped in love.", avatar: "avatars/narrator.jpg", role: "narrator" }
         ],
         image: "images/hotel.jpg",
-        options: [{ text: "Continue", next: "hotel_ending" }]
+        options: [{ text: "Continue", next: "ending_hotel" }]
       },
-      hotel_ending: {
+      city: {
         dialogue: [
-          { speaker: "Narrator", text: "As the night deepens, you both are wrapped under the blankets, watching movies until your eyelids grow heavy." },
-          { speaker: "Me", text: "I wish we could stay like this forever, my love." },
-          { speaker: "You", text: "This was the perfect birthday... I don’t need anything else 💖" },
-          { speaker: "Narrator", text: "You both drift off to sleep in each other's arms, with the TV still glowing softly in the background." }
+          { text: "You decide to go exploring Bangalore together. First stop: a pottery class!", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "This sounds adorable, let’s do it!", avatar: "avatars/you.jpg", role: "you" },
+          { text: "Our cups will always remind us of today.", avatar: "avatars/me.jpg", role: "me" },
+          { text: "Later, you head to Baamey’s for momo, chowmein, and aloo dum. The perfect lunch date.", avatar: "avatars/narrator.jpg", role: "narrator" }
+        ],
+        image: "images/city.jpg",
+        options: [{ text: "Continue ➡️", next: "ending_city" }]
+      },
+      ending_hotel: {
+        dialogue: [
+          { text: "As night falls, you’re still curled up together, the movie softly playing.", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "Happy Birthday, my love. This was perfect.", avatar: "avatars/me.jpg", role: "me" },
+          { text: "It really was…", avatar: "avatars/you.jpg", role: "you" }
         ],
         image: "images/hotel-night.jpg",
         options: [{ text: "Restart 🔄", next: "start" }]
       },
-      city: {
+      ending_city: {
         dialogue: [
-          { speaker: "Narrator", text: "You decide you want to go exploring Bangalore together, since he hasn't seen much of it." },
-          { speaker: "Me", text: "How would you like a pottery class? I heard there's a cute little studio nearby." },
-          { speaker: "You", text: "That sounds adorable! Let's do it babyyy." },
-          { speaker: "Narrator", text: "You both head to the pottery studio, where you're greeted by a friendly instructor." },
-          { speaker: "Instructor", text: "Welcome! Today, we'll be making our own pottery pieces. Just let your imagination run wild!" },
-          { speaker: "Narrator", text: "You and he sit at a table covered in clay, tools, and water bowls. You start shaping your clay, laughing as you try to make something recognizable. You tell him his clay looks like a frog and he pokes you with his clay-stained hands and you get fake-mad." },
-          { speaker: "You", text: "This pottery class is so cute!" },
-          { speaker: "Me", text: "Our cups will always remind us of today" },
-          { speaker: "Narrator", text: "After making your pottery, you feel hungry, and he suggests you go to Baamey's, the Nepali restaurant in Bangalore, a place you've always wanted to go. You're so excited! You order momo and chowmein and aloo dum and it all tastes exactly how you'd expect. It's the perfect day." }
-        ],
-        image: "images/city.jpg",
-        options: [{ text: "Continue ➡️", next: "city_ending" }]
-      },
-      city_ending: {
-        dialogue: [
-          { speaker: "Narrator", text: "By the time you get back, your legs ache but your heart is bursting with joy." },
-          { speaker: "Me", text: "Best. Day. Ever." },
-          { speaker: "You", text: "Agreed. I’ll never forget this day." },
-          { speaker: "Narrator", text: "The city lights fade outside as you both fall asleep, full of laughter and love." }
+          { text: "You return to the hotel room, legs tired but heart so full.", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "Happy Birthday, my love. I hope you enjoyed today.", avatar: "avatars/me.jpg", role: "me" },
+          { text: "Babyyy, I can’t believe you pulled this off!", avatar: "avatars/you.jpg", role: "you" }
         ],
         image: "images/night.jpg",
         options: [{ text: "Restart 🔄", next: "start" }]
@@ -223,19 +252,15 @@
 
     function renderDialogue(dialogue) {
       storyBox.innerHTML = "";
-      dialogue.forEach(line => {
+      dialogue.forEach((line, index) => {
         const div = document.createElement("div");
-        div.classList.add("dialogue");
+        div.classList.add("dialogue", line.role);
 
-        if (line.speaker === "You") div.classList.add("you");
-        else if (line.speaker === "Nayana" || line.speaker === "Instructor") div.classList.add("friend");
-        else if (line.speaker === "Me") div.classList.add("me");
-
-        if (line.speaker !== "Narrator") {
-          const name = document.createElement("div");
-          name.classList.add("name");
-          name.innerText = line.speaker;
-          div.appendChild(name);
+        if (line.avatar) {
+          const img = document.createElement("img");
+          img.src = line.avatar;
+          img.className = "avatar";
+          div.appendChild(img);
         }
 
         const bubble = document.createElement("div");
@@ -244,6 +269,9 @@
         div.appendChild(bubble);
 
         storyBox.appendChild(div);
+
+        // Stagger animations
+        div.style.animationDelay = `${index * 0.2}s`;
       });
     }
 
@@ -251,20 +279,19 @@
       const scene = scenes[name];
       bg.style.opacity = 0;
       storyBox.style.opacity = 0;
-      [...document.getElementsByClassName("choice")].forEach(btn => btn.style.opacity = 0);
+      choicesDiv.innerHTML = "";
 
       setTimeout(() => {
         bg.src = scene.image;
         renderDialogue(scene.dialogue);
-        choicesDiv.innerHTML = "";
 
-        scene.options.forEach(option => {
+        scene.options.forEach((option, i) => {
           const btn = document.createElement("button");
           btn.innerText = option.text;
           btn.className = "choice";
+          btn.style.animationDelay = `${i * 0.2}s`;
           btn.onclick = () => showScene(option.next);
           choicesDiv.appendChild(btn);
-          setTimeout(() => btn.style.opacity = 1, 200);
         });
 
         setTimeout(() => {
