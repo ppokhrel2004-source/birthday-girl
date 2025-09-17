@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Birthday Game 🎂</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -12,7 +13,6 @@
       color: white;
       overflow: hidden;
     }
-
     #game {
       position: relative;
       width: 100vw;
@@ -22,7 +22,6 @@
       justify-content: flex-end;
       align-items: center;
     }
-
     #background {
       position: absolute;
       top: 0; left: 0;
@@ -33,108 +32,70 @@
       opacity: 0;
       transition: opacity 1.5s ease-in-out;
     }
-
     #story {
       background: rgba(0, 0, 0, 0.6);
-      padding: 20px;
+      padding: 16px;
       border-radius: 16px;
       margin-bottom: 20px;
-      max-width: 750px;
-      font-size: 1.2em;
+      max-width: 95%;
+      width: 95%;
+      max-height: 50vh;
+      font-size: 1.1em;
       opacity: 0;
       transition: opacity 1s ease-in-out;
       white-space: pre-line;
+      overflow-y: auto;
+      box-sizing: border-box;
     }
-
     .dialogue {
-      margin: 14px 0;
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: fadeSlideIn 0.8s forwards;
+      margin: 12px 0;
     }
-
-    @keyframes fadeSlideIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     .avatar {
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
       flex-shrink: 0;
     }
-
     .bubble {
       display: inline-block;
-      padding: 12px 18px;
+      padding: 10px 16px;
       border-radius: 16px;
-      max-width: 90%;
-      animation: bubblePop 0.5s ease;
+      max-width: 80%;
+      word-wrap: break-word;
     }
-
-    @keyframes bubblePop {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .you .bubble {
-      background: #ffb6c1;
-      color: black;
-    }
-
-    .friend .bubble {
-      background: #add8e6;
-      color: black;
-    }
-
-    .me .bubble {
-      background: #98fb98;
-      color: black;
-    }
-
-    .narrator .bubble {
-      background: #eee;
-      color: black;
-      font-style: italic;
-    }
+    .you .bubble { background: #ffb6c1; color: black; }
+    .friend .bubble { background: #add8e6; color: black; }
+    .me .bubble { background: #98fb98; color: black; }
+    .narrator .bubble { background: #eee; color: black; font-style: italic; }
 
     .choice {
       display: inline-block;
-      margin: 10px;
-      padding: 14px 28px;
+      margin: 8px;
+      padding: 14px 24px;
       border: none;
       border-radius: 12px;
       background: #ffb6c1;
       color: black;
-      font-size: 1.1em;
+      font-size: 1em;
       cursor: pointer;
       transition: 0.3s;
-      transform: scale(0.9);
-      opacity: 0;
-      animation: choicePop 0.5s forwards;
+      min-width: 48%;
+      box-sizing: border-box;
     }
+    .choice:hover { background: hotpink; color: white; }
 
-    .choice:hover {
-      background: hotpink;
-      color: white;
-      transform: scale(1.05);
-    }
+    audio { display: none; }
 
-    @keyframes choicePop {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    audio {
-      display: none;
+    @media (max-width: 600px) {
+      #story { font-size: 1em; max-height: 55vh; }
+      .avatar { width: 35px; height: 35px; }
+      .bubble { padding: 8px 12px; }
+      .choice { padding: 12px 20px; font-size: 0.95em; }
     }
   </style>
 </head>
@@ -145,104 +106,22 @@
     <div id="choices"></div>
   </div>
 
-  <!-- Background music -->
   <audio id="bg-music" loop>
     <source src="music/birthday.mp3" type="audio/mpeg">
   </audio>
 
   <script>
+    // Scenes data remains same as before with avatars
     const scenes = {
-      start: {
-        dialogue: [
-          { text: "Happy Birthday Shreyaa", avatar: "avatars/friend1.jpg", role: "friend" },
-          { text: "Thank you!", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Nayana hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/midnight.jpg",
-        options: [{ text: "Continue", next: "morning" }]
-      },
-      morning: {
-        dialogue: [
-          { text: "The next morning…", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number...", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/morning.jpg",
-        options: [
-          { text: "Pick up the call 📞", next: "call_picked" },
-          { text: "Decline ❌", next: "call_declined" }
-        ]
-      },
-      call_picked: {
-        dialogue: [
-          { text: "Hello?", avatar: "avatars/you.jpg", role: "you" },
-          { text: "We have a flower delivery for you downstairs.", avatar: "avatars/friend2.jpg", role: "friend" },
-          { text: "Excited, you rush down… and there he is, standing with flowers just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/flowers.jpg",
-        options: [{ text: "Continue", next: "together" }]
-      },
-      call_declined: {
-        dialogue: [
-          { text: "Nah, must be spam…", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Nope! Come downstairs right now. This is important!", avatar: "avatars/friend1.jpg", role: "friend" },
-          { text: "She drags you down… and there he is, standing with flowers, just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/flowers.jpg",
-        options: [{ text: "Continue", next: "together" }]
-      },
-      together: {
-        dialogue: [
-          { text: "Happy Birthday, my sweetheart", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Babyyyyyy", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Now… how shall we spend the day?", avatar: "avatars/me.jpg", role: "me" }
-        ],
-        image: "images/decision.jpg",
-        options: [
-          { text: "Stay in the hotel room", next: "hotel" },
-          { text: "Explore the city", next: "city" }
-        ]
-      },
-      hotel: {
-        dialogue: [
-          { text: "It's a cozy room, with cream walls and a fluffy bed. You can’t wait to snuggle inside.", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "What do you wanna do, my love?", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Can we watch a movie?", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Of course babyyy, I’ll put it on! Hasee toh Phasee for you cutu boy.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "This movie is my favorite :>", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Guess what else we're getting... Pizza and Pasta!", avatar: "avatars/me.jpg", role: "me" },
-          { text: "The day couldn't get any better!", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/hotel.jpg",
-        options: [{ text: "Continue", next: "ending_hotel" }]
-      },
-      city: {
-        dialogue: [
-          { text: "You decide to go exploring Bangalore together. First stop: a pottery class!", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "This sounds adorable, let’s do it!", avatar: "avatars/you.jpg", role: "you" },
-          { text: "I will drink tea out of this cup you made for me babyyyyy.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Later you head to Baamey’s for momo, chowmein, and aloo dum. You've always wanted to go there, and this seems like the perfect lunch date.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/city.jpg",
-        options: [{ text: "Continue ➡️", next: "ending_city" }]
-      },
-      ending_hotel: {
-        dialogue: [
-          { text: "As night falls, you’re still curled up together, another one of your favourite movies playing.", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "Happy Birthday, my love. This was perfect. YOU are perfect my baby boy.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "I love you.", avatar: "avatars/you.jpg", role: "you" }
-        ],
-        image: "images/hotel-night.jpg",
-        options: [{ text: "Restart", next: "start" }]
-      },
-      ending_city: {
-        dialogue: [
-          { text: "You return to the hotel room, legs tired but hearts so full.", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "Happy Birthday, my love. I hope you enjoyed today.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Babyyy, I can’t believe you pulled this off! How did you do it?", avatar: "avatars/you.jpg", role: "you" }
-        ],
-        image: "images/night.jpg",
-        options: [{ text: "Restart 🔄", next: "start" }]
-      }
+      start: { dialogue:[{text:"Happy Birthday!!!", avatar:"avatars/friend1.jpg", role:"friend"}, {text:"Aww thank you!", avatar:"avatars/you.jpg", role:"you"}, {text:"Nayana hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep.", avatar:"avatars/narrator.jpg", role:"narrator"}], image:"images/midnight.jpg", options:[{text:"Continue", next:"morning"}]},
+      morning: { dialogue:[{text:"The next morning…", avatar:"avatars/narrator.jpg", role:"narrator"}, {text:"MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number...", avatar:"avatars/narrator.jpg", role:"narrator"}], image:"images/morning.jpg", options:[{text:"Pick up the call 📞", next:"call_picked"}, {text:"Decline ❌", next:"call_declined"}]},
+      call_picked: { dialogue:[{text:"Hello?", avatar:"avatars/you.jpg", role:"you"}, {text:"We have a flower delivery for you downstairs.", avatar:"avatars/friend2.jpg", role:"friend"}, {text:"Excited, you rush down… and there he is, standing with flowers just for you.", avatar:"avatars/narrator.jpg", role:"narrator"}], image:"images/flowers.jpg", options:[{text:"Continue", next:"together"}]},
+      call_declined: { dialogue:[{text:"Nah, must be spam…", avatar:"avatars/you.jpg", role:"you"}, {text:"Nope! Come downstairs right now. This is important!", avatar:"avatars/friend1.jpg", role:"friend"}, {text:"She drags you down… and there he is, standing with flowers, just for you.", avatar:"avatars/narrator.jpg", role:"narrator"}], image:"images/flowers.jpg", options:[{text:"Continue", next:"together"}]},
+      together: { dialogue:[{text:"Happy Birthday, my sweetheart", avatar:"avatars/me.jpg", role:"me"}, {text:"Babyyyyyy", avatar:"avatars/you.jpg", role:"you"}, {text:"Now… how shall we spend the day?", avatar:"avatars/me.jpg", role:"me"}], image:"images/decision.jpg", options:[{text:"Stay in the hotel room", next:"hotel"}, {text:"Explore the city", next:"city"}]},
+      hotel: { dialogue:[{text:"It's a cozy room, with cream walls and a fluffy bed. You can’t wait to snuggle inside.", avatar:"avatars/narrator.jpg", role:"narrator"}, {text:"What do you wanna do, my love?", avatar:"avatars/me.jpg", role:"me"}, {text:"Can we watch a movie?", avatar:"avatars/you.jpg", role:"you"}, {text:"Of course babyyy, I’ll put it on! Hasee toh Phasee for you my favourite boy.", avatar:"avatars/me.jpg", role:"me"}, {text:"This movie is my favorite :>", avatar:"avatars/you.jpg", role:"you"}, {text:"And the pizza and pasta make it even better!", avatar:"avatars/me.jpg", role:"me"}, {text:"The day feels like a warm dream, wrapped in love.", avatar:"avatars/narrator.jpg", role:"narrator"}], image:"images/hotel.jpg", options:[{text:"Continue", next:"ending_hotel"}]},
+      city: { dialogue:[{text:"You decide to go exploring Bangalore together. First stop: a pottery class!", avatar:"avatars/narrator.jpg", role:"narrator"}, {text:"This sounds adorable babyy.", avatar:"avatars/you.jpg", role:"you"}, {text:"I will always drink tea out of this mug you made me.", avatar:"avatars/me.jpg", role:"me"}, {text:"Later, you head to Baamey’s for momo, chowmein, and aloo dum. You've always wanted to go there, it's the perfect lunch date.", avatar:"avatars/narrator.jpg", role:"narrator"}], image:"images/city.jpg", options:[{text:"Continue ➡️", next:"ending_city"}]},
+      ending_hotel: { dialogue:[{text:"As night falls, you’re still curled up together, the movie softly playing.", avatar:"avatars/narrator.jpg", role:"narrator"}, {text:"Happy Birthday, my love. This was perfect. YOU are perfect.", avatar:"avatars/me.jpg", role:"me"}, {text:"I love you baby.", avatar:"avatars/you.jpg", role:"you"}], image:"images/hotel-night.jpg", options:[{text:"Restart 🔄", next:"start"}]},
+      ending_city: { dialogue:[{text:"You return to the hotel room, legs tired but hearts so full of love.", avatar:"avatars/narrator.jpg", role:"narrator"}, {text:"Happy Birthday, my love. I hope you enjoyed today.", avatar:"avatars/me.jpg", role:"me"}, {text:"Babyyy, I can’t believe you pulled this off!", avatar:"avatars/you.jpg", role:"you"}], image:"images/night.jpg", options:[{text:"Restart 🔄", next:"start"}]}
     };
 
     const bg = document.getElementById("background");
@@ -250,9 +129,13 @@
     const choicesDiv = document.getElementById("choices");
     const music = document.getElementById("bg-music");
 
-    function renderDialogue(dialogue) {
-      storyBox.innerHTML = "";
-      dialogue.forEach((line, index) => {
+    let currentScene = null;
+    let currentDialogueIndex = 0;
+
+    function renderNextDialogue() {
+      const dialogue = currentScene.dialogue;
+      if (currentDialogueIndex < dialogue.length) {
+        const line = dialogue[currentDialogueIndex];
         const div = document.createElement("div");
         div.classList.add("dialogue", line.role);
 
@@ -269,46 +152,42 @@
         div.appendChild(bubble);
 
         storyBox.appendChild(div);
-
-        // Stagger animations
-        div.style.animationDelay = `${index * 0.2}s`;
-      });
-    }
-
-    function showScene(name) {
-      const scene = scenes[name];
-      bg.style.opacity = 0;
-      storyBox.style.opacity = 0;
-      choicesDiv.innerHTML = "";
-
-      setTimeout(() => {
-        bg.src = scene.image;
-        renderDialogue(scene.dialogue);
-
-        scene.options.forEach((option, i) => {
+        storyBox.scrollTop = storyBox.scrollHeight; // auto-scroll
+        currentDialogueIndex++;
+      } else {
+        // show choices when dialogue is over
+        choicesDiv.innerHTML = "";
+        currentScene.options.forEach(option => {
           const btn = document.createElement("button");
           btn.innerText = option.text;
           btn.className = "choice";
-          btn.style.animationDelay = `${i * 0.2}s`;
           btn.onclick = () => showScene(option.next);
           choicesDiv.appendChild(btn);
         });
-
-        setTimeout(() => {
-          bg.style.opacity = 1;
-          storyBox.style.opacity = 1;
-        }, 200);
-      }, 500);
+      }
     }
 
+    function showScene(name) {
+      currentScene = scenes[name];
+      currentDialogueIndex = 0;
+      storyBox.innerHTML = "";
+      choicesDiv.innerHTML = "";
+      bg.style.opacity = 0;
+
+      setTimeout(() => {
+        bg.src = currentScene.image;
+        bg.style.opacity = 1;
+        renderNextDialogue();
+      }, 200);
+    }
+
+    // tap anywhere to advance
     document.body.addEventListener("click", () => {
-      if (music.paused) {
-        music.play().catch(err => console.log("Music autoplay blocked:", err));
-      }
-    }, { once: true });
+      if (music.paused) music.play().catch(err => console.log("Music autoplay blocked:", err));
+      renderNextDialogue();
+    });
 
     showScene("start");
   </script>
 </body>
 </html>
-
