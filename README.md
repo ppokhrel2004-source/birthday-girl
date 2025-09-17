@@ -1,0 +1,1 @@
+Hi my love, happy 21st birthday to you. I made you a little game, a simulation of how we would spend the day tomorrow if things were different. I hope you like it baby. you're the best ever, my best friend, my world. i will love you for the rest of my life and yours and for the rest of time and forever i will always love you without any conditions.
