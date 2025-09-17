@@ -12,8 +12,8 @@
       background: #000;
       color: white;
       overflow: hidden;
-      -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
-      touch-action: manipulation; /* Improve touch responsiveness */
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
     #game {
       position: relative;
@@ -21,8 +21,10 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
+      padding: 1em;
+      box-sizing: border-box;
     }
     #background {
       position: absolute;
@@ -38,23 +40,22 @@
       background: rgba(0, 0, 0, 0.6);
       padding: 16px;
       border-radius: 16px;
-      margin-bottom: 20px;
       max-width: 95vw;
       width: 95vw;
-      max-height: 55vh;
-      font-size: 4vw; /* Responsive font size */
-      opacity: 1; /* Make sure visible */
+      max-height: 60vh;
+      font-size: 4vw;
+      opacity: 1;
       transition: opacity 1s ease-in-out;
       white-space: pre-line;
       overflow-y: auto;
       box-sizing: border-box;
-      display: block; /* Ensure visible */
+      display: block;
       z-index: 10;
+      margin-bottom: 1em;
     }
     #choices {
       width: 95vw;
       max-width: 600px;
-      margin-bottom: 20px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -70,7 +71,7 @@
       border-radius: 12px;
       background: #ffb6c1;
       color: black;
-      font-size: 4vw; /* Responsive font size */
+      font-size: 4vw;
       cursor: pointer;
       transition: 0.3s;
       min-width: 140px;
@@ -148,8 +149,7 @@
           { text: "Happy Birthday!!!", avatar: "avatars/friend1.jpg", role: "friend" },
           { text: "Aww thank you!", avatar: "avatars/you.jpg", role: "you" },
           {
-            text:
-              "Nayana hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep.",
+            text: "Nayana hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep.",
             avatar: "avatars/narrator.jpg",
             role: "narrator",
           },
@@ -161,7 +161,7 @@
         dialogue: [
           { text: "The next morning…", avatar: "avatars/narrator.jpg", role: "narrator" },
           {
-            text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number...",
+            text: "MontFort is closed today to celebrate your birthday. Just as you're about to go back to sleep, your phone rings from an unknown number...",
             avatar: "avatars/narrator.jpg",
             role: "narrator",
           },
@@ -204,10 +204,10 @@
       },
       hotel: {
         dialogue: [
-          { text: "It's a cozy room, with cream walls and a fluffy bed. You can’t wait to snuggle inside.", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "It's a cozy room, with cream walls and a fluffy bed. You can't wait to snuggle inside.", avatar: "avatars/narrator.jpg", role: "narrator" },
           { text: "What do you wanna do, my love?", avatar: "avatars/me.jpg", role: "me" },
           { text: "Can we watch a movie?", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Of course babyyy, I’ll put it on! Hasee toh Phasee for you my favourite boy.", avatar: "avatars/me.jpg", role: "me" },
+          { text: "Of course babyyy, I'll put it on! Hasee toh Phasee for you my favourite boy.", avatar: "avatars/me.jpg", role: "me" },
           { text: "This movie is my favorite :>", avatar: "avatars/you.jpg", role: "you" },
           { text: "And the pizza and pasta make it even better!", avatar: "avatars/me.jpg", role: "me" },
           { text: "The day feels like a warm dream, wrapped in love.", avatar: "avatars/narrator.jpg", role: "narrator" },
@@ -220,14 +220,14 @@
           { text: "You decide to go exploring Bangalore together. First stop: a pottery class!", avatar: "avatars/narrator.jpg", role: "narrator" },
           { text: "This sounds adorable babyy.", avatar: "avatars/you.jpg", role: "you" },
           { text: "I will always drink tea out of this mug you made me.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Later, you head to Baamey’s for momo, chowmein, and aloo dum. You've always wanted to go there, it's the perfect lunch date.", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "Later, you head to Baamey's for momo, chowmein, and aloo dum. You've always wanted to go there, it's the perfect lunch date.", avatar: "avatars/narrator.jpg", role: "narrator" },
         ],
         image: "images/city.jpg",
         options: [{ text: "Continue ➡️", next: "ending_city" }],
       },
       ending_hotel: {
         dialogue: [
-          { text: "As night falls, you’re still curled up together, the movie softly playing.", avatar: "avatars/narrator.jpg", role: "narrator" },
+          { text: "As night falls, you're still curled up together, the movie softly playing.", avatar: "avatars/narrator.jpg", role: "narrator" },
           { text: "Happy Birthday, my love. This was perfect. YOU are perfect.", avatar: "avatars/me.jpg", role: "me" },
           { text: "I love you baby.", avatar: "avatars/you.jpg", role: "you" },
         ],
@@ -238,7 +238,7 @@
         dialogue: [
           { text: "You return to the hotel room, legs tired but hearts so full of love.", avatar: "avatars/narrator.jpg", role: "narrator" },
           { text: "Happy Birthday, my love. I hope you enjoyed today.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Babyyy, I can’t believe you pulled this off!", avatar: "avatars/you.jpg", role: "you" },
+          { text: "Babyyy, I can't believe you pulled this off!", avatar: "avatars/you.jpg", role: "you" },
         ],
         image: "images/night.jpg",
         options: [{ text: "Restart 🔄", next: "start" }],
@@ -273,10 +273,9 @@
         div.appendChild(bubble);
 
         storyBox.appendChild(div);
-        storyBox.scrollTop = storyBox.scrollHeight; // auto-scroll
+        storyBox.scrollTop = storyBox.scrollHeight;
         currentDialogueIndex++;
       } else {
-        // show choices when dialogue is over
         choicesDiv.innerHTML = "";
         currentScene.options.forEach((option) => {
           const btn = document.createElement("button");
@@ -294,9 +293,9 @@
       storyBox.innerHTML = "";
       choicesDiv.innerHTML = "";
       bg.style.opacity = 0;
-      storyBox.style.opacity = 1; // ensure visible
-      storyBox.style.display = "block"; // ensure visible
-      choicesDiv.style.display = "flex"; // ensure visible
+      storyBox.style.opacity = 1;
+      storyBox.style.display = "block";
+      choicesDiv.style.display = "flex";
 
       setTimeout(() => {
         bg.src = currentScene.image;
@@ -305,7 +304,6 @@
       }, 200);
     }
 
-    // tap anywhere to advance
     document.body.addEventListener("click", () => {
       if (music.paused) music.play().catch((err) => console.log("Music autoplay blocked:", err));
       renderNextDialogue();
