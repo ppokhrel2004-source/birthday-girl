@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            font-size: 16px; /* Base font size */
+            font-size: 16px;
         }
         
         body {
@@ -25,8 +25,10 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center; /* This is the key change */
             align-items: center;
+            padding: 2.5vh;
+            box-sizing: border-box;
         }
 
         #background {
@@ -41,22 +43,43 @@
             transition: opacity 1.5s ease-in-out;
         }
 
+        #story-container {
+            position: relative;
+            max-width: 90vw;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh; /* This helps with vertical centering */
+        }
+        
         #story {
             background: rgba(0, 0, 0, 0.6);
-            padding: 2.5vh; /* Responsive padding */
+            padding: 2.5vh;
             border-radius: 16px;
-            margin-bottom: 2.5vh; /* Responsive margin */
-            max-width: 90vw; /* Fit to screen width */
-            font-size: 1em; /* Base font size */
+            max-width: 90vw;
+            width: 100%;
+            font-size: 1em;
             opacity: 0;
             transition: opacity 1s ease-in-out;
             white-space: pre-line;
             cursor: pointer;
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            box-sizing: border-box;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        #choices {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 2.5vh; /* Added space between story and choices */
         }
 
         .dialogue {
-            margin: 1.5vh 0; /* Responsive margin */
+            margin: 1.5vh 0;
             display: flex;
             align-items: flex-start;
             gap: 12px;
@@ -85,9 +108,9 @@
             display: inline-block;
             padding: 12px 18px;
             border-radius: 16px;
-            max-width: 80%; /* Adjusted for mobile */
+            max-width: 80%;
             animation: bubblePop 0.5s ease;
-            word-wrap: break-word; /* Ensure text wraps */
+            word-wrap: break-word;
         }
 
         @keyframes bubblePop {
@@ -116,18 +139,11 @@
             font-style: italic;
         }
 
-        #choices {
-            display: flex;
-            flex-direction: column; /* Stack choices vertically */
-            align-items: center;
-            width: 100%;
-        }
-
         .choice {
-            display: block; /* Block-level element for vertical stacking */
-            width: 80%; /* Wider buttons for easier tapping */
-            margin: 1vh auto; /* Vertical margin and horizontal centering */
-            padding: 2.5vh 0; /* Larger touch target */
+            display: block;
+            width: 80%;
+            margin: 1vh auto;
+            padding: 2.5vh 0;
             border: none;
             border-radius: 12px;
             background: #ffb6c1;
@@ -156,14 +172,12 @@
             display: none;
         }
 
-        /* Media query for smaller phones */
         @media (max-width: 480px) {
             :root {
-                font-size: 14px; /* Smaller base font for very small screens */
+                font-size: 14px;
             }
             #story {
                 padding: 2vh;
-                margin-bottom: 2vh;
             }
             .avatar {
                 width: 40px;
@@ -181,10 +195,13 @@
 </head>
 <body>
     <div id="game">
-        <img id="background" src="images/start.jpg" alt="Background">
-        <div id="story">Loading...</div>
-        <div id="choices"></div>
+        <div id="story-container">
+            <div id="story">Loading...</div>
+            <div id="choices"></div>
+        </div>
     </div>
+    
+    <img id="background" src="images/start.jpg" alt="Background">
 
     <audio id="bg-music" loop>
         <source src="music/birthday.mp3" type="audio/mpeg">
@@ -288,6 +305,7 @@
         const bg = document.getElementById("background");
         const storyBox = document.getElementById("story");
         const choicesDiv = document.getElementById("choices");
+        const gameDiv = document.getElementById("game"); // Reference to the main game div
         const music = document.getElementById("bg-music");
 
         let currentSceneName = "";
@@ -365,7 +383,8 @@
             }
         });
 
-        storyBox.addEventListener("click", showNextDialogue);
+        // Event listener on the entire #game div
+        gameDiv.addEventListener("click", showNextDialogue);
 
         showScene("start");
     </script>
