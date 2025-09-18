@@ -1,313 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Happy birthday baby</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: "Quicksand", sans-serif;
-      background: #000;
-      color: white;
-      overflow: hidden;
-    }
-
-    #game {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-    }
-
-    #background {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 1.5s ease-in-out;
-    }
-
-    #story {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 20px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      max-width: 750px;
-      font-size: 1.2em;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-      white-space: pre-line;
-    }
-
-    .dialogue {
-      margin: 14px 0;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: fadeSlideIn 0.8s forwards;
-    }
-
-    @keyframes fadeSlideIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-      flex-shrink: 0;
-    }
-
-    .bubble {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 16px;
-      max-width: 90%;
-      animation: bubblePop 0.5s ease;
-    }
-
-    @keyframes bubblePop {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .you .bubble {
-      background: #ffb6c1;
-      color: black;
-    }
-
-    .friend .bubble {
-      background: #add8e6;
-      color: black;
-    }
-
-    .me .bubble {
-      background: #98fb98;
-      color: black;
-    }
-
-    .narrator .bubble {
-      background: #eee;
-      color: black;
-      font-style: italic;
-    }
-
-    .choice {
-      display: inline-block;
-      margin: 10px;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 12px;
-      background: #ffb6c1;
-      color: black;
-      font-size: 1.1em;
-      cursor: pointer;
-      transition: 0.3s;
-      transform: scale(0.9);
-      opacity: 0;
-      animation: choicePop 0.5s forwards;
-    }
-
-    .choice:hover {
-      background: hotpink;
-      color: white;
-      transform: scale(1.05);
-    }
-
-    @keyframes choicePop {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    audio {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <div id="game">
-    <img id="background" src="images/start.jpg" alt="Background">
-    <div id="story">Loading...</div>
-    <div id="choices"></div>
-  </div>
-
-  <!-- Background music -->
-  <audio id="bg-music" loop>
-    <source src="music/birthday.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    const scenes = {
-      start: {
-        dialogue: [
-          { text: "Happy Birthday!!!", avatar: "avatars/friend1.jpg", role: "friend" },
-          { text: "Aww thank you!", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Nayana hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/midnight.jpg",
-        options: [{ text: "Continue", next: "morning" }]
-      },
-      morning: {
-        dialogue: [
-          { text: "The next morning…", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number...", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/morning.jpg",
-        options: [
-          { text: "Pick up the call 📞", next: "call_picked" },
-          { text: "Decline ❌", next: "call_declined" }
-        ]
-      },
-      call_picked: {
-        dialogue: [
-          { text: "Hello?", avatar: "avatars/you.jpg", role: "you" },
-          { text: "We have a flower delivery for you downstairs.", avatar: "avatars/friend2.jpg", role: "friend" },
-          { text: "Excited, you rush down… and there he is, standing with flowers just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/flowers.jpg",
-        options: [{ text: "Continue", next: "together" }]
-      },
-      call_declined: {
-        dialogue: [
-          { text: "Nah, must be spam…", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Nope! Come downstairs right now. This is important!", avatar: "avatars/friend1.jpg", role: "friend" },
-          { text: "She drags you down… and there he is, standing with flowers, just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/flowers.jpg",
-        options: [{ text: "Continue", next: "together" }]
-      },
-      together: {
-        dialogue: [
-          { text: "Happy Birthday, my sweetheart", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Babyyyyyy", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Now… how shall we spend the day?", avatar: "avatars/me.jpg", role: "me" }
-        ],
-        image: "images/decision.jpg",
-        options: [
-          { text: "Stay in the hotel room", next: "hotel" },
-          { text: "Explore the city", next: "city" }
-        ]
-      },
-      hotel: {
-        dialogue: [
-          { text: "It's a cozy room, with cream walls and a fluffy bed. You can’t wait to snuggle inside.", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "What do you wanna do, my love?", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Can we watch a movie?", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Of course babyyy, I’ll put it on! Hasee toh Phasee", avatar: "avatars/me.jpg", role: "me" },
-          { text: ":>", avatar: "avatars/you.jpg", role: "you" },
-          { text: "Guess what else I've got...", avatar: "avatars/me.jpg", role: "me" },
-          { text: "It was the spinach and mushroom pasta from Fusilli reasons...", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/hotel.jpg",
-        options: [{ text: "Continue", next: "ending_hotel" }]
-      },
-      city: {
-        dialogue: [
-          { text: "You decide to go exploring Bangalore together. First stop: a pottery class!", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "This is sooooo cute babyyy.", avatar: "avatars/you.jpg", role: "you" },
-          { text: "I'm glad you like it sweetheart.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Later, you head to Baamey’s for momo, chowmein, and aloo dum. The perfect lunch date.", avatar: "avatars/narrator.jpg", role: "narrator" }
-        ],
-        image: "images/city.jpg",
-        options: [{ text: "Continue ➡️", next: "ending_city" }]
-      },
-      ending_hotel: {
-        dialogue: [
-          { text: "As night falls, you’re still curled up together, another movie softly playing in the TV.", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "Happy Birthday, my love. This was perfect. You're perfect.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "I love you so much.", avatar: "avatars/you.jpg", role: "you" }
-        ],
-        image: "images/hotel-night.jpg",
-        options: [{ text: "Restart 🔄", next: "start" }]
-      },
-      ending_city: {
-        dialogue: [
-          { text: "You return to the hotel room, legs tired but heart so full.", avatar: "avatars/narrator.jpg", role: "narrator" },
-          { text: "Happy Birthday, my love. I hope you enjoyed today.", avatar: "avatars/me.jpg", role: "me" },
-          { text: "Babyyy, I can’t believe you pulled this off!", avatar: "avatars/you.jpg", role: "you" }
-        ],
-        image: "images/night.jpg",
-        options: [{ text: "Restart 🔄", next: "start" }]
-      }
-    };
-
-    const bg = document.getElementById("background");
-    const storyBox = document.getElementById("story");
-    const choicesDiv = document.getElementById("choices");
-    const music = document.getElementById("bg-music");
-
-    function renderDialogue(dialogue) {
-      storyBox.innerHTML = "";
-      dialogue.forEach((line, index) => {
-        const div = document.createElement("div");
-        div.classList.add("dialogue", line.role);
-
-        if (line.avatar) {
-          const img = document.createElement("img");
-          img.src = line.avatar;
-          img.className = "avatar";
-          div.appendChild(img);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy birthday baby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            font-size: 16px; /* Base font size */
+        }
+        
+        body {
+            margin: 0;
+            font-family: "Quicksand", sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
-        const bubble = document.createElement("div");
-        bubble.classList.add("bubble");
-        bubble.innerText = line.text;
-        div.appendChild(bubble);
+        #game {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
 
-        storyBox.appendChild(div);
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
 
-        // Stagger animations
-        div.style.animationDelay = `${index * 0.2}s`;
-      });
-    }
+        #story {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2.5vh; /* Responsive padding */
+            border-radius: 16px;
+            margin-bottom: 2.5vh; /* Responsive margin */
+            max-width: 90vw; /* Fit to screen width */
+            font-size: 1em; /* Base font size */
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            white-space: pre-line;
+            cursor: pointer;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
 
-    function showScene(name) {
-      const scene = scenes[name];
-      bg.style.opacity = 0;
-      storyBox.style.opacity = 0;
-      choicesDiv.innerHTML = "";
+        .dialogue {
+            margin: 1.5vh 0; /* Responsive margin */
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeSlideIn 0.8s forwards;
+        }
 
-      setTimeout(() => {
-        bg.src = scene.image;
-        renderDialogue(scene.dialogue);
+        @keyframes fadeSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        scene.options.forEach((option, i) => {
-          const btn = document.createElement("button");
-          btn.innerText = option.text;
-          btn.className = "choice";
-          btn.style.animationDelay = `${i * 0.2}s`;
-          btn.onclick = () => showScene(option.next);
-          choicesDiv.appendChild(btn);
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            flex-shrink: 0;
+        }
+
+        .bubble {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 16px;
+            max-width: 80%; /* Adjusted for mobile */
+            animation: bubblePop 0.5s ease;
+            word-wrap: break-word; /* Ensure text wraps */
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .you .bubble {
+            background: #ffb6c1;
+            color: black;
+        }
+
+        .friend .bubble {
+            background: #add8e6;
+            color: black;
+        }
+
+        .me .bubble {
+            background: #98fb98;
+            color: black;
+        }
+
+        .narrator .bubble {
+            background: #eee;
+            color: black;
+            font-style: italic;
+        }
+
+        #choices {
+            display: flex;
+            flex-direction: column; /* Stack choices vertically */
+            align-items: center;
+            width: 100%;
+        }
+
+        .choice {
+            display: block; /* Block-level element for vertical stacking */
+            width: 80%; /* Wider buttons for easier tapping */
+            margin: 1vh auto; /* Vertical margin and horizontal centering */
+            padding: 2.5vh 0; /* Larger touch target */
+            border: none;
+            border-radius: 12px;
+            background: #ffb6c1;
+            color: black;
+            font-size: 1em;
+            cursor: pointer;
+            transition: 0.3s;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: choicePop 0.5s forwards;
+            text-align: center;
+        }
+
+        .choice:hover {
+            background: hotpink;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        @keyframes choicePop {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        audio {
+            display: none;
+        }
+
+        /* Media query for smaller phones */
+        @media (max-width: 480px) {
+            :root {
+                font-size: 14px; /* Smaller base font for very small screens */
+            }
+            #story {
+                padding: 2vh;
+                margin-bottom: 2vh;
+            }
+            .avatar {
+                width: 40px;
+                height: 40px;
+            }
+            .bubble {
+                padding: 10px 15px;
+            }
+            .choice {
+                width: 90%;
+                padding: 2vh 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <img id="background" src="images/start.jpg" alt="Background">
+        <div id="story">Loading...</div>
+        <div id="choices"></div>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="music/birthday.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const scenes = {
+            start: {
+                dialogue: [
+                    { text: "Happy Birthday!!!", avatar: "avatars/friend1.jpg", role: "friend" },
+                    { text: "Aww thank you!", avatar: "avatars/you.jpg", role: "you" },
+                    { text: "Nayana hugs you tight. Soon, Shruti, MJ, Aleena call too. Your parents call right after. After all the love, now you need your beauty sleep.", avatar: "avatars/narrator.jpg", role: "narrator" }
+                ],
+                image: "images/midnight.jpg",
+                options: [{ text: "Continue", next: "morning" }]
+            },
+            morning: {
+                dialogue: [
+                    { text: "The next morning…", avatar: "avatars/narrator.jpg", role: "narrator" },
+                    { text: "MontFort is closed today to celebrate your birthday. Just as you’re about to go back to sleep, your phone rings from an unknown number...", avatar: "avatars/narrator.jpg", role: "narrator" }
+                ],
+                image: "images/morning.jpg",
+                options: [
+                    { text: "Pick up the call 📞", next: "call_picked" },
+                    { text: "Decline ❌", next: "call_declined" }
+                ]
+            },
+            call_picked: {
+                dialogue: [
+                    { text: "Hello?", avatar: "avatars/you.jpg", role: "you" },
+                    { text: "We have a flower delivery for you downstairs.", avatar: "avatars/friend2.jpg", role: "friend" },
+                    { text: "Excited, you rush down… and there he is, standing with flowers just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
+                ],
+                image: "images/flowers.jpg",
+                options: [{ text: "Continue", next: "together" }]
+            },
+            call_declined: {
+                dialogue: [
+                    { text: "Nah, must be spam…", avatar: "avatars/you.jpg", role: "you" },
+                    { text: "Nope! Come downstairs right now. This is important!", avatar: "avatars/friend1.jpg", role: "friend" },
+                    { text: "She drags you down… and there he is, standing with flowers, just for you.", avatar: "avatars/narrator.jpg", role: "narrator" }
+                ],
+                image: "images/flowers.jpg",
+                options: [{ text: "Continue", next: "together" }]
+            },
+            together: {
+                dialogue: [
+                    { text: "Happy Birthday, my sweetheart", avatar: "avatars/me.jpg", role: "me" },
+                    { text: "Babyyyyyy", avatar: "avatars/you.jpg", role: "you" },
+                    { text: "Now… how shall we spend the day?", avatar: "avatars/me.jpg", role: "me" }
+                ],
+                image: "images/decision.jpg",
+                options: [
+                    { text: "Stay in the hotel room", next: "hotel" },
+                    { text: "Explore the city", next: "city" }
+                ]
+            },
+            hotel: {
+                dialogue: [
+                    { text: "It's a cozy room, with cream walls and a fluffy bed. You can’t wait to snuggle inside.", avatar: "avatars/narrator.jpg", role: "narrator" },
+                    { text: "What do you wanna do, my love?", avatar: "avatars/me.jpg", role: "me" },
+                    { text: "Can we watch a movie?", avatar: "avatars/you.jpg", role: "you" },
+                    { text: "Of course babyyy, I’ll put it on! Hasee toh Phasee", avatar: "avatars/me.jpg", role: "me" },
+                    { text: ":>", avatar: "avatars/you.jpg", role: "you" },
+                    { text: "Guess what else I've got...", avatar: "avatars/me.jpg", role: "me" },
+                    { text: "It was the spinach and mushroom pasta from Fusilli reasons...", avatar: "avatars/narrator.jpg", role: "narrator" }
+                ],
+                image: "images/hotel.jpg",
+                options: [{ text: "Continue", next: "ending_hotel" }]
+            },
+            city: {
+                dialogue: [
+                    { text: "You decide to go exploring Bangalore together. First stop: a pottery class!", avatar: "avatars/narrator.jpg", role: "narrator" },
+                    { text: "This is sooooo cute babyyy.", avatar: "avatars/you.jpg", role: "you" },
+                    { text: "I'm glad you like it sweetheart.", avatar: "avatars/me.jpg", role: "me" },
+                    { text: "Later, you head to Baamey’s for momo, chowmein, and aloo dum. The perfect lunch date.", avatar: "avatars/narrator.jpg", role: "narrator" }
+                ],
+                image: "images/city.jpg",
+                options: [{ text: "Continue ➡️", next: "ending_city" }]
+            },
+            ending_hotel: {
+                dialogue: [
+                    { text: "As night falls, you’re still curled up together, another movie softly playing in the TV.", avatar: "avatars/narrator.jpg", role: "narrator" },
+                    { text: "Happy Birthday, my love. This was perfect. You're perfect.", avatar: "avatars/me.jpg", role: "me" },
+                    { text: "I love you so much.", avatar: "avatars/you.jpg", role: "you" }
+                ],
+                image: "images/hotel-night.jpg",
+                options: [{ text: "Restart 🔄", next: "start" }]
+            },
+            ending_city: {
+                dialogue: [
+                    { text: "You return to the hotel room, legs tired but heart so full.", avatar: "avatars/narrator.jpg", role: "narrator" },
+                    { text: "Happy Birthday, my love. I hope you enjoyed today.", avatar: "avatars/me.jpg", role: "me" },
+                    { text: "Babyyy, I can’t believe you pulled this off!", avatar: "avatars/you.jpg", role: "you" }
+                ],
+                image: "images/night.jpg",
+                options: [{ text: "Restart 🔄", next: "start" }]
+            }
+        };
+
+        const bg = document.getElementById("background");
+        const storyBox = document.getElementById("story");
+        const choicesDiv = document.getElementById("choices");
+        const music = document.getElementById("bg-music");
+
+        let currentSceneName = "";
+        let currentDialogueIndex = 0;
+        let isWaitingForClick = false;
+
+        function showNextDialogue() {
+            if (!isWaitingForClick) return;
+
+            const scene = scenes[currentSceneName];
+            if (currentDialogueIndex < scene.dialogue.length) {
+                const line = scene.dialogue[currentDialogueIndex];
+                const div = document.createElement("div");
+                div.classList.add("dialogue", line.role);
+
+                if (line.avatar) {
+                    const img = document.createElement("img");
+                    img.src = line.avatar;
+                    img.className = "avatar";
+                    div.appendChild(img);
+                }
+
+                const bubble = document.createElement("div");
+                bubble.classList.add("bubble");
+                bubble.innerText = line.text;
+                div.appendChild(bubble);
+
+                storyBox.appendChild(div);
+
+                currentDialogueIndex++;
+            }
+
+            if (currentDialogueIndex === scene.dialogue.length) {
+                showChoices(scene.options);
+            }
+        }
+
+        function showChoices(options) {
+            choicesDiv.innerHTML = "";
+            options.forEach((option, i) => {
+                const btn = document.createElement("button");
+                btn.innerText = option.text;
+                btn.className = "choice";
+                btn.style.animationDelay = `${i * 0.2}s`;
+                btn.onclick = () => showScene(option.next);
+                choicesDiv.appendChild(btn);
+            });
+            isWaitingForClick = false;
+        }
+
+        function showScene(name) {
+            currentSceneName = name;
+            currentDialogueIndex = 0;
+            isWaitingForClick = true;
+
+            const scene = scenes[name];
+            bg.style.opacity = 0;
+            storyBox.style.opacity = 0;
+            choicesDiv.innerHTML = "";
+            storyBox.innerHTML = "";
+
+            setTimeout(() => {
+                bg.src = scene.image;
+                setTimeout(() => {
+                    bg.style.opacity = 1;
+                    storyBox.style.opacity = 1;
+                    showNextDialogue();
+                }, 200);
+            }, 500);
+        }
+
+        document.body.addEventListener("click", () => {
+            if (music.paused) {
+                music.play().catch(err => console.log("Music autoplay blocked:", err));
+            }
         });
 
-        setTimeout(() => {
-          bg.style.opacity = 1;
-          storyBox.style.opacity = 1;
-        }, 200);
-      }, 500);
-    }
+        storyBox.addEventListener("click", showNextDialogue);
 
-    document.body.addEventListener("click", () => {
-      if (music.paused) {
-        music.play().catch(err => console.log("Music autoplay blocked:", err));
-      }
-    }, { once: true });
-
-    showScene("start");
-  </script>
+        showScene("start");
+    </script>
 </body>
 </html>
